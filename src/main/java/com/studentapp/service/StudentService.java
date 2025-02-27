@@ -21,17 +21,16 @@ public class StudentService {
     public Student addStudent(String name) {
         Student student = new Student();
         student.setName(name);
-        student.setAttendance(false);
-        return studentRepository.save(student);
+        student.setAttendance(true);
+        return studentRepository.save(student);  // Return saved student
     }
 
     public Student toggleAttendance(Long id) {
-        Optional<Student> studentOpt = studentRepository.findById(id);
-        if (studentOpt.isPresent()) {
-            Student student = studentOpt.get();
-            student.setAttendance(!student.getAttendance());
-            return studentRepository.save(student);
-        }
-        return null;  // Handle case where student is not found
+        return studentRepository.findById(id)
+                .map(student -> {
+                    student.setAttendance(!student.getAttendance());  // Toggle attendance
+                    return studentRepository.save(student);  // Save and return updated student
+                })
+                .orElse(null);  // Return null if student not found
     }
 }
