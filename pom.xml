@@ -7,7 +7,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.1.2</version>
-        <relativePath/> <!-- Ensures correct versioning for dependencies -->
+        <relativePath/>
     </parent>
 
     <groupId>com.studentapp</groupId>
@@ -16,11 +16,11 @@
     <packaging>jar</packaging>
 
     <properties>
-        <java.version>17</java.version> <!-- Updated Java Version -->
+        <java.version>17</java.version>
     </properties>
 
     <dependencies>
-        <!-- Spring Boot Starter Web (Without Tomcat) -->
+        <!-- Spring Boot Web Starter (Without Tomcat) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -32,10 +32,18 @@
             </exclusions>
         </dependency>
 
-        <!-- Jetty as Embedded Server -->
+        <!-- Use Jetty as Embedded Server (Explicit Jetty 11 version) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jetty</artifactId>
+        </dependency>
+
+        <!-- Jakarta Servlet API (Ensure Compatibility) -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>5.0.0</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Spring Boot Data JPA -->
@@ -48,7 +56,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.33</version> <!-- Fixed: Added version -->
+            <version>8.0.33</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -73,10 +81,10 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>\\\${java.version}</source> <!-- Fixed escape issue -->
-                    <target>\\\${java.version}</target> <!-- Fixed escape issue -->
+                    <source>\${java.version}</source>
+                    <target>\${java.version}</target>
                     <compilerArgs>
-                        <arg>-parameters</arg> <!-- Fixes the debug fallback warning -->
+                        <arg>-parameters</arg>
                     </compilerArgs>
                 </configuration>
             </plugin>
