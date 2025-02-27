@@ -3,29 +3,25 @@ package com.studentapp.controller;
 import com.studentapp.model.Student;
 import com.studentapp.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController  // Changed from @Controller to @RestController for JSON responses
+@RequestMapping("/students")
 public class StudentController {
 
     @Autowired
     private StudentService studentService;
 
     @GetMapping("/")
-    public String home(Model model) {
-        List<Student> students = studentService.getAllStudents();
-        model.addAttribute("students", students);
-        return "index";
+    public List<Student> home() {
+        return studentService.getAllStudents();
     }
 
     @PostMapping("/addStudent")
-    public String addStudent(@RequestParam String name) {
-        studentService.addStudent(name);
-        return "redirect:/";
+    public Student addStudent(@RequestParam String name) {
+        return studentService.addStudent(name);
     }
 
     @PutMapping("/updateAttendance/{id}")
