@@ -18,20 +18,20 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
-    public void addStudent(String name) {
+    public Student addStudent(String name) {
         Student student = new Student();
         student.setName(name);
-        student.setAttendance(true);
-        studentRepository.save(student);
+        student.setAttendance(false);
+        return studentRepository.save(student);
     }
 
     public Student toggleAttendance(Long id) {
         Optional<Student> studentOpt = studentRepository.findById(id);
         if (studentOpt.isPresent()) {
             Student student = studentOpt.get();
-            student.setAttendance(!student.isAttendance());
-            studentRepository.save(student);
+            student.setAttendance(!student.getAttendance());
+            return studentRepository.save(student);
         }
-        return null;
+        return null;  // Handle case where student is not found
     }
 }
