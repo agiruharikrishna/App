@@ -15,9 +15,9 @@ document.addEventListener("DOMContentLoaded", function () {
             fetch("/addStudent", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Content-Type": "application/json",
                 },
-                body: "name=" + encodeURIComponent(studentName),
+                body: JSON.stringify({ name: studentName }),
             })
             .then(response => {
                 if (!response.ok) throw new Error("Failed to add student");
@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function toggleAttendance(studentId) {
-    fetch(`/updateAttendance/${studentId}`, { method: "POST" })
+    fetch(`/updateAttendance/${studentId}`, { method: "PUT" }) // Use PUT instead of POST
         .then(response => {
             if (!response.ok) throw new Error("Failed to update attendance");
             return response.text();
