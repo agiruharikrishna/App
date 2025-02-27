@@ -19,13 +19,13 @@ public class Student {
     // Default constructor (Required by JPA)
     public Student() {}
 
-    // Parameterized constructor for convenience
+    // Parameterized constructor
     public Student(String name, boolean attendance) {
         this.name = name;
         this.attendance = attendance;
     }
 
-    // Getter and Setter for ID
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -34,7 +34,6 @@ public class Student {
         this.id = id;
     }
 
-    // Getter and Setter for Name
     public String getName() {
         return name;
     }
@@ -43,8 +42,7 @@ public class Student {
         this.name = name;
     }
 
-    // Getter and Setter for Attendance
-    public boolean isAttendance() {  // Correct naming convention for booleans
+    public boolean isAttendance() {
         return attendance;
     }
 
