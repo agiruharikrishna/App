@@ -28,7 +28,7 @@ public class StudentService {
     public Student toggleAttendance(Long id) {
         return studentRepository.findById(id)
                 .map(student -> {
-                    student.setAttendance(!student.getAttendance());  // Toggle attendance
+                    student.setAttendance(!student.isAttendance());  // Fixed getter method
                     return studentRepository.save(student);  // Save and return updated student
                 })
                 .orElse(null);  // Return null if student not found
