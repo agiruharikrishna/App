@@ -35,7 +35,11 @@ public class StudentService {
         }
 
         String generatedPassword = generatePassword(studentName);
-        Student student = new Student(studentName, passwordEncoder.encode(generatedPassword));
+        Student student = new Student();
+        student.setName(studentName);
+        student.setPassword(passwordEncoder.encode(generatedPassword));
+        student.setEnabled(true);
+
         studentRepository.save(student);
     }
 
@@ -61,8 +65,12 @@ public class StudentService {
     }
 
     public boolean authenticate(String name, String password) {
-        Optional<Student> student = studentRepository.findByName(name);
-        return student.map(value -> passwordEncoder.matches(password, value.getPassword())).orElse(false);
+        Optional<Student> studentOpt = studentRepository.findByName(name);
+        if (studentOpt.isPresent()) {
+            Student student = studentOpt.get();
+            return passwordEncoder.matches(password, student.getPassword());
+        }
+        return false;
     }
 
     public Student registerStudent(String name, String rawPassword) {
@@ -77,7 +85,10 @@ public class StudentService {
             throw new IllegalArgumentException("User with name '" + name + "' already exists.");
         }
 
-        Student student = new Student(name, passwordEncoder.encode(rawPassword));
+        Student student = new Student();
+        student.setName(name);
+        student.setPassword(passwordEncoder.encode(rawPassword));
+        student.setEnabled(true);
         return studentRepository.save(student);
     }
 }
