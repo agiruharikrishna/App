@@ -8,11 +8,11 @@ public class LoginController {
 
     @GetMapping("/login")
     public String showLoginPage() {
-        return "login"; // Corresponds to login.html in templates
+        return "login";
     }
 
     @GetMapping("/home")
     public String showHomePage() {
-        return "home"; // Corresponds to home.html in templates
+        return "home";
     }
 }
