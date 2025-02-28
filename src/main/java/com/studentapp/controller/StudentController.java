@@ -1,56 +1,56 @@
-package com.studentapp.controller;
+package com.studentapp.service;
 
 import com.studentapp.model.Student;
-import com.studentapp.service.StudentService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import com.studentapp.repository.StudentRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
 
-@RestController
-@RequestMapping("/students")
-public class StudentController {
+@Service
+public class StudentService {
 
-    @Autowired
-    private StudentService studentService;
+    private final StudentRepository studentRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @GetMapping
-    public ResponseEntity<List<Student>> getAllStudents() {
-        List<Student> students = studentService.getAllStudents();
-        return ResponseEntity.ok(students);
+    public StudentService(StudentRepository studentRepository, PasswordEncoder passwordEncoder) {
+        this.studentRepository = studentRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<String> addStudent(@RequestBody Student student) {
-        if (student.getName() == null || student.getName().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body("Student name cannot be empty");
+    public boolean authenticate(String name, String password) {
+        Optional<Student> student = studentRepository.findByName(name);
+
+        if (student.isPresent()) {
+            boolean matches = passwordEncoder.matches(password, student.get().getPassword());
+            if (!matches) {
+                System.out.println("❌ Authentication failed for user: " + name);
+            }
+            return matches;
         }
-        studentService.addStudent(student.getName());
-        return ResponseEntity.status(HttpStatus.CREATED).body("Student added successfully");
+
+        System.out.println("❌ User not found: " + name);
+        return false;
     }
 
-    @PutMapping("/updateAttendance/{id}")
-    public ResponseEntity<String> updateAttendance(@PathVariable Long id) {
-        boolean isUpdated = studentService.toggleAttendance(id);
-        if (isUpdated) {
-            return ResponseEntity.ok("Attendance updated successfully");
+    public Student registerStudent(String name, String rawPassword) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be empty.");
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student not found");
-    }
-
-    @GetMapping("/generate-password")
-    public ResponseEntity<String> generatePassword(@RequestParam String studentName) {
-        if (studentName == null || studentName.trim().isEmpty()) {
-            return ResponseEntity.badRequest().body("Student name is required");
+        if (rawPassword == null || rawPassword.trim().isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be empty.");
         }
-        String password = studentService.generatePassword(studentName);
-        return ResponseEntity.ok(password);
-    }
 
-    @GetMapping("/login")
-    public ResponseEntity<String> login() {
-        return ResponseEntity.ok("Login page");
+        // Check if student already exists
+        Optional<Student> existingStudent = studentRepository.findByName(name);
+        if (existingStudent.isPresent()) { // ✅ Fixed this line
+            throw new IllegalArgumentException("User with name '" + name + "' already exists.");
+        }
+
+        Student student = new Student();
+        student.setName(name);
+        student.setPassword(passwordEncoder.encode(rawPassword));
+        student.setEnabled(true);
+        return studentRepository.save(student);
     }
 }
