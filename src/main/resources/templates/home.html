@@ -2,11 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Home</title>
-    <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 <body>
-    <h2>Welcome to Student Attendance System</h2>
-    <p>You are logged in.</p>
-    <a href="/logout">Logout</a>
+    <h2>Welcome Home</h2>
+    <p>You're successfully logged in!</p>
+    <form method="post" action="/logout">
+        <button type="submit">Logout</button>
+    </form>
 </body>
 </html>
