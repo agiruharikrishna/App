@@ -35,11 +35,7 @@ public class StudentService {
         }
 
         String generatedPassword = generatePassword(studentName);
-        Student student = new Student();
-        student.setName(studentName);
-        student.setPassword(passwordEncoder.encode(generatedPassword));
-        student.setEnabled(true);
-
+        Student student = new Student(studentName, passwordEncoder.encode(generatedPassword));
         studentRepository.save(student);
     }
 
@@ -81,10 +77,7 @@ public class StudentService {
             throw new IllegalArgumentException("User with name '" + name + "' already exists.");
         }
 
-        Student student = new Student();
-        student.setName(name);
-        student.setPassword(passwordEncoder.encode(rawPassword));
-        student.setEnabled(true);
+        Student student = new Student(name, passwordEncoder.encode(rawPassword));
         return studentRepository.save(student);
     }
 }
