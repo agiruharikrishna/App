@@ -34,5 +34,14 @@ public class StudentController {
         Student updatedStudent = studentService.toggleAttendance(id);
         return updatedStudent != null ? ResponseEntity.ok(updatedStudent) : ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/generate-password")
+    public String generatePassword(@RequestParam(required = false) String studentName, Model model) {
+        if (studentName != null && !studentName.isEmpty()) {
+            String password = passwordService.generatePassword(studentName);
+            model.addAttribute("generatedPassword", password);
+        }
+        return "password";
+    }
 }
 
