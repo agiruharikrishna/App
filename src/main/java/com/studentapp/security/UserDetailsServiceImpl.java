@@ -32,11 +32,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                    .build();
     }
 
-    // Method to register user with encoded password
-    public void registerStudent(String name, String password) {
+    // Method to register user with encoded password and return the created student
+    public Student registerStudent(String name, String password) {
         Student student = new Student();
         student.setName(name);
         student.setPassword(passwordEncoder.encode(password)); // Encode the password
-        studentRepository.save(student);
+        return studentRepository.save(student); // Return saved student
     }
 }
