@@ -1,11 +1,11 @@
 package com.studentapp.controller;
 
 import com.studentapp.service.StudentService;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.ui.Model;
 
-@Controller
+@RestController // Changed to @RestController for JSON responses
+@RequestMapping("/auth")
 public class LoginController {
 
     private final StudentService studentService;
@@ -14,28 +14,18 @@ public class LoginController {
         this.studentService = studentService;
     }
 
-    @GetMapping("/login")
-    public String showLoginPage() {
-        return "login";
-    }
-
     @PostMapping("/login")
-    public String login(@RequestParam String name, @RequestParam String password, Model model) {
-        if (studentService.authenticate(name, password)) {
-            return "redirect:/home";
+    public ResponseEntity<String> login(@RequestParam String name, @RequestParam String password) {
+        boolean isAuthenticated = studentService.authenticate(name, password);
+        if (isAuthenticated) {
+            return ResponseEntity.ok("Login successful");
         }
-        model.addAttribute("error", "Invalid username or password");
-        return "login";
-    }
-
-    @GetMapping("/register")
-    public String showRegistrationPage() {
-        return "register";
+        return ResponseEntity.status(401).body("Invalid username or password");
     }
 
     @PostMapping("/register")
-    public String register(@RequestParam String name, @RequestParam String password, Model model) {
+    public ResponseEntity<String> register(@RequestParam String name, @RequestParam String password) {
         studentService.registerStudent(name, password);
-        return "redirect:/login";
+        return ResponseEntity.ok("Registration successful");
     }
 }

@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 import java.util.Collections;
 
 @Service
@@ -24,6 +23,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Student student = studentRepository.findByName(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Student not found: " + username));
 
-        return new User(student.getName(), "{noop}" + student.getPassword(), Collections.emptyList());
+        // Password is already hashed in the database, no need for {noop}
+        return User.withUsername(student.getName())
+                   .password(student.getPassword()) // Already hashed!
+                   .roles("STUDENT") // Optional: Assign a default role
+                   .build();
     }
 }

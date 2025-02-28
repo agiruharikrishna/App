@@ -4,49 +4,42 @@ import com.studentapp.model.Student;
 import com.studentapp.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController // Changed to @RestController for API responses
+@RequestMapping("/students")
 public class StudentController {
 
     @Autowired
     private StudentService studentService;
 
     @GetMapping("/")
-    public String home(Model model) {
-        List<Student> students = studentService.getAllStudents();
-        model.addAttribute("students", students);
-        return "index";
+    public List<Student> getAllStudents() {
+        return studentService.getAllStudents();
     }
 
-    @PostMapping("/addStudent")
+    @PostMapping("/add")
     public ResponseEntity<String> addStudent(@RequestBody Student student) {
         studentService.addStudent(student.getName());
         return ResponseEntity.ok("Student added successfully");
     }
 
     @PutMapping("/updateAttendance/{id}")
-    public ResponseEntity<Student> updateAttendance(@PathVariable Long id) {
-        Student updatedStudent = studentService.toggleAttendance(id);
-        return updatedStudent != null ? ResponseEntity.ok(updatedStudent) : ResponseEntity.notFound().build();
+    public ResponseEntity<Boolean> updateAttendance(@PathVariable Long id) {
+        boolean isUpdated = studentService.toggleAttendance(id);
+        return ResponseEntity.ok(isUpdated);
     }
 
     @GetMapping("/generate-password")
-    public String generatePassword(@RequestParam(required = false) String studentName, Model model) {
-        if (studentName != null && !studentName.isEmpty()) {
-            String password = studentService.generatePassword(studentName);
-            model.addAttribute("generatedPassword", password);
-        }
-        return "password";
+    public ResponseEntity<String> generatePassword(@RequestParam String studentName) {
+        String password = studentService.generatePassword(studentName);
+        return ResponseEntity.ok(password);
     }
 
     @GetMapping("/login")
-    public String login() {
-        return "login"; // Returns the login.html template
+    public ResponseEntity<String> login() {
+        return ResponseEntity.ok("Login page");
     }
 }
-

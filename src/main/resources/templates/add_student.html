@@ -2,19 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Student</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <script defer src="/js/script.js"></script> <!-- External JavaScript -->
 </head>
 <body>
     <h1>Add Student</h1>
 
     <div class="form-container">
-        <form action="/addStudent" method="POST">
+        <form id="studentForm">
             <label for="studentName">Student Name:</label>
-            <input type="text" id="studentName" name="name" placeholder="Enter Student Name" required>
+            <input type="text" id="studentName" name="name" placeholder="Enter Student Name" required aria-label="Enter student name">
             <button type="submit">Add</button>
         </form>
+        <p id="successMessage" style="display: none; color: green; font-weight: bold;">✅ Student added successfully!</p>
         <a href="/">⬅ Back to Home</a>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const studentForm = document.getElementById("studentForm");
+            const studentNameInput = document.getElementById("studentName");
+            const successMessage = document.getElementById("successMessage");
+
+            studentForm.addEventListener("submit", async function (event) {
+                event.preventDefault(); // Prevent default form submission
+                let studentName = studentNameInput.value.trim();
+
+                if (studentName === "") {
+                    alert("Student name cannot be empty!");
+                    return;
+                }
+
+                try {
+                    let response = await fetch("/addStudent", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ name: studentName }),
+                    });
+
+                    if (!response.ok) throw new Error("Failed to add student");
+
+                    successMessage.style.display = "block"; // Show success message
+                    studentNameInput.value = ""; // Clear input field
+                    setTimeout(() => successMessage.style.display = "none", 3000); // Hide message after 3s
+                } catch (error) {
+                    console.error("Error adding student:", error);
+                    alert("❌ Error: Unable to add student");
+                }
+            });
+        });
+    </script>
 </body>
 </html>

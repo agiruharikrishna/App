@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
 @Table(name = "students")
@@ -27,7 +28,13 @@ public class Student {
 
     public Student(String name, String password) {
         this.name = name;
-        this.password = password;
+        this.password = encodePassword(password);
         this.enabled = true;
+    }
+
+    // Helper method to hash passwords
+    private String encodePassword(String rawPassword) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        return encoder.encode(rawPassword);
     }
 }
