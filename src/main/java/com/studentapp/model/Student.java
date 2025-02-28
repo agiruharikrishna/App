@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "students")  // Ensure table name matches
+@Table(name = "students")
 public class Student {
 
     @Id
@@ -19,7 +19,7 @@ public class Student {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Status status = Status.ACTIVE; // Matching ENUM
+    private Status status = Status.ACTIVE;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -32,7 +32,23 @@ public class Student {
         ACTIVE, INACTIVE
     }
 
-    // Getters and Setters
+    // ✅ Default constructor (required by JPA)
+    public Student() {}
+
+    // ✅ Parameterized constructor (used in StudentService)
+    public Student(String name, String password, Status status) {
+        this.name = name;
+        this.password = password;
+        this.status = status;
+    }
+
+    // Auto-update `updatedAt` before saving
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    // Getters
     public Long getId() { return id; }
     public String getName() { return name; }
     public String getPassword() { return password; }
@@ -40,6 +56,7 @@ public class Student {
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
 
+    // Setters
     public void setName(String name) { this.name = name; }
     public void setPassword(String password) { this.password = password; }
     public void setStatus(Status status) { this.status = status; }
