@@ -7,15 +7,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import java.util.Collections;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final StudentRepository studentRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserDetailsServiceImpl(StudentRepository studentRepository) {
+    public UserDetailsServiceImpl(StudentRepository studentRepository, PasswordEncoder passwordEncoder) {
         this.studentRepository = studentRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -28,5 +30,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                    .password(student.getPassword()) // Already hashed!
                    .roles("STUDENT") // Optional: Assign a default role
                    .build();
+    }
+
+    // Method to register user with encoded password
+    public void registerStudent(String name, String password) {
+        Student student = new Student();
+        student.setName(name);
+        student.setPassword(passwordEncoder.encode(password)); // Encode the password
+        studentRepository.save(student);
     }
 }
