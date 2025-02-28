@@ -1,6 +1,5 @@
 package com.studentapp.security;
 
-import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,7 +20,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Disable CSRF if using stateless API
+            .csrf(csrf -> csrf
+                .ignoringRequestMatchers("/logout")  // Disables CSRF protection for logout
+            )
             .authorizeHttpRequests(auth -> 
                 auth.requestMatchers("/login", "/register", "/resources/**", "/css/**").permitAll()
                     .anyRequest().authenticated()
