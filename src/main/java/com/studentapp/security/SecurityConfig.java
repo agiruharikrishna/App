@@ -1,19 +1,40 @@
+package com.studentapp.security;
+
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeRequests()
-                .antMatchers("/login", "/resources/**").permitAll() // Allow access to login and static resources
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/login", "/resources/**").permitAll() // Allow access to login and static resources
                 .anyRequest().authenticated() // Protect other routes
-                .and()
-            .formLogin()
-                .loginPage("/login") // Specify the custom login page
-                .permitAll(); // Allow everyone to see the login page
+            )
+            .formLogin(login -> login
+                .loginPage("/login") // Custom login page
+                .permitAll()
+            );
+
+        return http.build();
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        // Creating an in-memory user for testing
+        UserDetails user = User.withDefaultPasswordEncoder()
+                .username("student")
+                .password("password")
+                .roles("USER")
+                .build();
+        return new InMemoryUserDetailsManager(user);
     }
 }
