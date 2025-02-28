@@ -18,9 +18,13 @@ public class StudentController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Student> registerStudent(@RequestParam String name, @RequestParam String password) {
-        Student student = studentService.registerStudent(name, password);
-        return ResponseEntity.ok(student);
+    public ResponseEntity<?> registerStudent(@RequestParam String name, @RequestParam String password) {
+        try {
+            Student student = studentService.registerStudent(name, password);
+            return ResponseEntity.ok(student);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage()); // Return error message
+        }
     }
 
     @PostMapping("/authenticate")
@@ -36,8 +40,12 @@ public class StudentController {
     }
 
     @PostMapping("/toggleAttendance/{id}")
-    public ResponseEntity<Boolean> toggleAttendance(@PathVariable Long id) {
-        boolean toggled = studentService.toggleAttendance(id);
-        return ResponseEntity.ok(toggled);
+    public ResponseEntity<?> toggleAttendance(@PathVariable Long id) {
+        try {
+            boolean toggled = studentService.toggleAttendance(id);
+            return ResponseEntity.ok(toggled);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
