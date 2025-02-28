@@ -1,22 +1,33 @@
 package com.studentapp.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "students")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Student {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Column(nullable = false)
     private String password;
 
-    private boolean enabled = true;
+    @Column(nullable = false)
+    private boolean enabled = true; // Default to true
 
-    // Getters and Setters
+    public Student(String name, String password) {
+        this.name = name;
+        this.password = password;
+        this.enabled = true;
+    }
 }
