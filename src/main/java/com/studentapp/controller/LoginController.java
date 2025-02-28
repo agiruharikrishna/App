@@ -1,11 +1,12 @@
 package com.studentapp.controller;
 
 import com.studentapp.service.StudentService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 
-@RestController // Changed to @RestController for JSON responses
-@RequestMapping("/auth")
+@Controller
 public class LoginController {
 
     private final StudentService studentService;
@@ -14,18 +15,16 @@ public class LoginController {
         this.studentService = studentService;
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String name, @RequestParam String password) {
-        boolean isAuthenticated = studentService.authenticate(name, password);
-        if (isAuthenticated) {
-            return ResponseEntity.ok("Login successful");
-        }
-        return ResponseEntity.status(401).body("Invalid username or password");
+    // Login page (handled by Spring Security)
+    @GetMapping("/login")
+    public String loginPage() {
+        return "login";
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestParam String name, @RequestParam String password) {
-        studentService.registerStudent(name, password);
-        return ResponseEntity.ok("Registration successful");
+    // Home page after successful login
+    @GetMapping("/home")
+    public String homePage(Authentication authentication, Model model) {
+        model.addAttribute("name", authentication.getName());
+        return "home";
     }
 }
