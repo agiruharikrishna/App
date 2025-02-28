@@ -5,7 +5,9 @@ import com.studentapp.repository.StudentRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class StudentService {
@@ -18,19 +20,53 @@ public class StudentService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public boolean authenticate(String name, String password) {
-        Optional<Student> student = studentRepository.findByName(name);
+    public List<Student> getAllStudents() {
+        return studentRepository.findAll();
+    }
 
-        if (student.isPresent()) {
-            boolean matches = passwordEncoder.matches(password, student.get().getPassword());
-            if (!matches) {
-                System.out.println("❌ Authentication failed for user: " + name);
-            }
-            return matches;
+    public void addStudent(String studentName) {
+        if (studentName == null || studentName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Student name cannot be empty.");
         }
 
-        System.out.println("❌ User not found: " + name);
+        // Check if student already exists
+        if (studentRepository.findByName(studentName).isPresent()) {
+            throw new IllegalArgumentException("Student with name '" + studentName + "' already exists.");
+        }
+
+        String generatedPassword = generatePassword(studentName);
+        Student student = new Student();
+        student.setName(studentName);
+        student.setPassword(passwordEncoder.encode(generatedPassword));
+        student.setEnabled(true);
+
+        studentRepository.save(student);
+    }
+
+    public boolean toggleAttendance(Long id) {
+        Optional<Student> studentOpt = studentRepository.findById(id);
+        if (studentOpt.isPresent()) {
+            Student student = studentOpt.get();
+            student.setPresent(!student.isPresent()); // Toggle attendance
+            studentRepository.save(student);
+            return true;
+        }
         return false;
+    }
+
+    public String generatePassword(String studentName) {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder password = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < 8; i++) { // 8-character password
+            password.append(characters.charAt(random.nextInt(characters.length())));
+        }
+        return password.toString();
+    }
+
+    public boolean authenticate(String name, String password) {
+        Optional<Student> student = studentRepository.findByName(name);
+        return student.map(value -> passwordEncoder.matches(password, value.getPassword())).orElse(false);
     }
 
     public Student registerStudent(String name, String rawPassword) {
@@ -41,7 +77,6 @@ public class StudentService {
             throw new IllegalArgumentException("Password cannot be empty.");
         }
 
-        // Check if student already exists
         if (studentRepository.findByName(name).isPresent()) {
             throw new IllegalArgumentException("User with name '" + name + "' already exists.");
         }
