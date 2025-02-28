@@ -31,7 +31,7 @@ public class StudentService {
     // Updated registration method leveraging UserDetailsServiceImpl
     public Student registerStudent(String name, String rawPassword) {
         // Call to UserDetailsServiceImpl for registration and return the student
-        return userDetailsService.registerStudent(name, rawPassword);
+        return userDetailsService.registerStudent(name, rawPassword);  // Make sure this returns Student
     }
 
     // Method to fetch all students
