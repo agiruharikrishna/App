@@ -1,40 +1,57 @@
 package com.studentapp.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
 @Table(name = "students")
-@Getter
-@Setter
-@NoArgsConstructor
 public class Student {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
     private String name;
-
-    @Column(nullable = false)
     private String password;
+    private boolean enabled;
 
-    @Column(nullable = false)
-    private boolean enabled = true; // Default to true
+    // Default constructor
+    public Student() {
+    }
 
+    // Parameterized constructor
     public Student(String name, String password) {
         this.name = name;
-        this.password = encodePassword(password);
+        this.password = password;
         this.enabled = true;
     }
 
-    // Helper method to hash passwords
-    private String encodePassword(String rawPassword) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        return encoder.encode(rawPassword);
+    // Getters
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    // Setters
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }
