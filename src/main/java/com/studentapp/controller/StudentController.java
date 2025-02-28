@@ -38,7 +38,7 @@ public class StudentController {
     @GetMapping("/generate-password")
     public String generatePassword(@RequestParam(required = false) String studentName, Model model) {
         if (studentName != null && !studentName.isEmpty()) {
-            String password = passwordService.generatePassword(studentName);
+            String password = studentService.generatePassword(studentName);
             model.addAttribute("generatedPassword", password);
         }
         return "password";
