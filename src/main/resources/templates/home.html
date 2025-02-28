@@ -8,14 +8,14 @@
 </head>
 <body>
     <div class="container">
-        <h2>Welcome, <span th:text="${#authentication.name}">Student</span>!</h2>
+        <h2>Welcome, <span th:text="${name}">Student</span>!</h2>
 
         <nav>
             <a href="/attendance">📋 View Attendance</a>
             <a href="/add-student">➕ Add Student</a>
         </nav>
 
-        <form method="post" action="/logout" th:action="@{/logout}">
+        <form method="post" action="/logout">
             <button type="submit">🚪 Logout</button>
         </form>
     </div>
