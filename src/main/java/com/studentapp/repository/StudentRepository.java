@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Repository  // Explicitly marking this as a Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
-    Optional<Student> findByName(String name);
+    Optional<Student> findByName(String name); // Ensures an optional return type
 
-    boolean existsByName(String name); // New method to check if a student exists
+    boolean existsByName(String name); // Method to check if a student exists
 }
