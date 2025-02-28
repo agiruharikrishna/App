@@ -43,5 +43,10 @@ public class StudentController {
         }
         return "password";
     }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login"; // Returns the login.html template
+    }
 }
 
