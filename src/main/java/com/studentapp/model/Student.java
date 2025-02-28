@@ -13,6 +13,7 @@ public class Student {
     private String name;
     private String password;
     private boolean enabled;
+    private boolean present; // Added for attendance tracking
 
     // Default constructor
     public Student() {
@@ -23,6 +24,7 @@ public class Student {
         this.name = name;
         this.password = password;
         this.enabled = true;
+        this.present = false; // Default attendance is false
     }
 
     // Getters
@@ -42,6 +44,10 @@ public class Student {
         return enabled;
     }
 
+    public boolean isPresent() {
+        return present;
+    }
+
     // Setters
     public void setName(String name) {
         this.name = name;
@@ -53,5 +59,9 @@ public class Student {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public void setPresent(boolean present) {
+        this.present = present;
     }
 }
