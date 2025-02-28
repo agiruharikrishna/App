@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Password Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        input, button { padding: 10px; margin-top: 10px; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <h2>Student Password Generator</h2>
+
+    <form action="/generate-password" method="get">
+        <label for="studentName">Enter Student Name:</label>
+        <input type="text" id="studentName" name="studentName" required>
+        <button type="submit">Generate Password</button>
+    </form>
+
+    <div th:if="${generatedPassword}">
+        <h3>Generated Password:</h3>
+        <p style="font-weight: bold; font-size: 20px;" th:text="${generatedPassword}"></p>
+    </div>
+</body>
+</html>
