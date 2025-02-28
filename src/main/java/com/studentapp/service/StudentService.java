@@ -30,14 +30,12 @@ public class StudentService {
         }
 
         // Check if student already exists
-        if (studentRepository.findByName(studentName).isPresent()) {
+        if (studentRepository.existsByName(studentName)) {
             throw new IllegalArgumentException("Student with name '" + studentName + "' already exists.");
         }
 
         String generatedPassword = generatePassword(studentName);
-        Student student = new Student();
-        student.setName(studentName);
-        student.setPassword(passwordEncoder.encode(generatedPassword));
+        Student student = new Student(studentName, passwordEncoder.encode(generatedPassword));
         student.setEnabled(true);
 
         studentRepository.save(student);
@@ -47,7 +45,7 @@ public class StudentService {
         Optional<Student> studentOpt = studentRepository.findById(id);
         if (studentOpt.isPresent()) {
             Student student = studentOpt.get();
-            student.setPresent(!student.isPresent()); // Toggle attendance
+            student.setPresent(!student.isPresent()); // Ensure Student has isPresent() method
             studentRepository.save(student);
             return true;
         }
@@ -65,12 +63,8 @@ public class StudentService {
     }
 
     public boolean authenticate(String name, String password) {
-        Optional<Student> studentOpt = studentRepository.findByName(name);
-        if (studentOpt.isPresent()) {
-            Student student = studentOpt.get();
-            return passwordEncoder.matches(password, student.getPassword());
-        }
-        return false;
+        Optional<Student> student = studentRepository.findByName(name);
+        return student.map(value -> passwordEncoder.matches(password, value.getPassword())).orElse(false);
     }
 
     public Student registerStudent(String name, String rawPassword) {
@@ -81,13 +75,11 @@ public class StudentService {
             throw new IllegalArgumentException("Password cannot be empty.");
         }
 
-        if (studentRepository.findByName(name).isPresent()) {
+        if (studentRepository.existsByName(name)) {
             throw new IllegalArgumentException("User with name '" + name + "' already exists.");
         }
 
-        Student student = new Student();
-        student.setName(name);
-        student.setPassword(passwordEncoder.encode(rawPassword));
+        Student student = new Student(name, passwordEncoder.encode(rawPassword));
         student.setEnabled(true);
         return studentRepository.save(student);
     }
