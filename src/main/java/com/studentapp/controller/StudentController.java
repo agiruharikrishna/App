@@ -3,37 +3,48 @@ package com.studentapp.controller;
 import com.studentapp.model.Student;
 import com.studentapp.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController // Changed to @RestController for API responses
+@RestController
 @RequestMapping("/students")
 public class StudentController {
 
     @Autowired
     private StudentService studentService;
 
-    @GetMapping("/")
-    public List<Student> getAllStudents() {
-        return studentService.getAllStudents();
+    @GetMapping
+    public ResponseEntity<List<Student>> getAllStudents() {
+        List<Student> students = studentService.getAllStudents();
+        return ResponseEntity.ok(students);
     }
 
     @PostMapping("/add")
     public ResponseEntity<String> addStudent(@RequestBody Student student) {
+        if (student.getName() == null || student.getName().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("Student name cannot be empty");
+        }
         studentService.addStudent(student.getName());
-        return ResponseEntity.ok("Student added successfully");
+        return ResponseEntity.status(HttpStatus.CREATED).body("Student added successfully");
     }
 
     @PutMapping("/updateAttendance/{id}")
-    public ResponseEntity<Boolean> updateAttendance(@PathVariable Long id) {
+    public ResponseEntity<String> updateAttendance(@PathVariable Long id) {
         boolean isUpdated = studentService.toggleAttendance(id);
-        return ResponseEntity.ok(isUpdated);
+        if (isUpdated) {
+            return ResponseEntity.ok("Attendance updated successfully");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student not found");
     }
 
     @GetMapping("/generate-password")
     public ResponseEntity<String> generatePassword(@RequestParam String studentName) {
+        if (studentName == null || studentName.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("Student name is required");
+        }
         String password = studentService.generatePassword(studentName);
         return ResponseEntity.ok(password);
     }
