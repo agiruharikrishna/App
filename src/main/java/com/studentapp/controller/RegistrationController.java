@@ -12,7 +12,7 @@ public class RegistrationController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/register")
+    @GetMapping("/register")
     public String registerUser(@RequestParam String name, @RequestParam String password) {
         userService.saveUser(name, password);  // Ensure saveUser encrypts the password before saving
         return "redirect:/login";  // Redirect to login after successful registration
