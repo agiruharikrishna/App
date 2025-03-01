@@ -1,7 +1,7 @@
 package com.studentapp.controller;
 
 import com.studentapp.service.StudentService;
-import com.studentapp.security.UserDetailsServiceImpl;  // Make sure this import is correct
+import com.studentapp.security.UserDetailsServiceImpl;  // Ensure this is the correct import
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class LoginController {
 
     private final StudentService studentService;
-    private final UserDetailsServiceImpl userDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;  // Remove if not needed
 
     // Combine both services in one constructor
     public LoginController(StudentService studentService, UserDetailsServiceImpl userDetailsService) {
