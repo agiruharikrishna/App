@@ -12,6 +12,6 @@ public class UserService {
     private UserRepository userRepository;
 
     public User saveUser(User user) {
-        userRepository.save(user);  // Save the user to the database
+       return userRepository.save(user);  // Save the user to the database
     }
 }
