@@ -1,7 +1,7 @@
 package com.studentapp.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
 @Entity
 public class User {
@@ -11,20 +11,7 @@ public class User {
     private String username;
     private String password;
 
-    // Existing constructor with ID
-    public User(Long id, String username, String password) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-    }
-
-    // New constructor without ID (for easier creation)
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
-    // Getters and setters (if not already present)
+    // Getters and Setters
     public Long getId() {
         return id;
     }
