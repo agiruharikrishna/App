@@ -26,7 +26,7 @@ public class LoginController {
     }
 
     // Home page after successful login
-    @GetMapping("/home")
+    @GetMapping("/homePage")
     public String homePage(Authentication authentication, Model model) {
         model.addAttribute("name", authentication.getName());
         return "home";  // Only return the home view
