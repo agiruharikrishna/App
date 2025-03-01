@@ -2,7 +2,6 @@ package com.studentapp.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,7 +16,7 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
 
-    public SecurityConfig(@Lazy UserDetailsService userDetailsService, @Lazy PasswordEncoder passwordEncoder) {
+    public SecurityConfig(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -25,16 +24,23 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeRequests()
-            .antMatchers("/login", "/register").permitAll()
-            .anyRequest().authenticated()
-            .and()
-            .formLogin()
-            .loginPage("/login")
-            .permitAll()
-            .and()
-            .logout()
-            .permitAll();
+            .csrf(csrf -> csrf
+                .ignoringRequestMatchers("/logout")  // Disables CSRF protection for logout
+            )
+            .authorizeHttpRequests(auth -> 
+                auth.requestMatchers("/login", "/register", "/resources/**", "/css/**").permitAll()
+                    .anyRequest().authenticated()
+            )
+            .formLogin(form -> 
+                form.loginPage("/login")
+                    .defaultSuccessUrl("/home", true)
+                    .permitAll()
+            )
+            .logout(logout -> 
+                logout.logoutUrl("/logout")
+                    .logoutSuccessUrl("/login?logout")
+                    .permitAll()
+            );
         return http.build();
     }
 
