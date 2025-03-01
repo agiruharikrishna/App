@@ -15,7 +15,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final StudentRepository studentRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserDetailsServiceImpl(StudentRepository studentRepository, PasswordEncoder passwordEncoder) {
+    public UserDetailsServiceImpl(StudentRepository studentRepository, @Lazy PasswordEncoder passwordEncoder) {
         this.studentRepository = studentRepository;
         this.passwordEncoder = passwordEncoder;
     }
