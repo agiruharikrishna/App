@@ -3,6 +3,7 @@ package com.studentapp.controller;
 import com.studentapp.service.StudentService;
 import com.studentapp.security.UserDetailsServiceImpl;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,12 +27,18 @@ public class LoginController {
     }
 
     // Home page after successful login
-    @GetMapping("/home")  // Changed to /home
+    @GetMapping("/home")
     public String homePage(Authentication authentication, Model model) {
-        if (authentication != null) {
+        if (authentication != null && authentication.isAuthenticated()) {
             model.addAttribute("name", authentication.getName());
             return "home";
         }
-        return "redirect:/login";  // Only return the home view
+        return "redirect:/login";  // Redirect to login if not authenticated
+    }
+    
+    // Logout page or functionality
+    @RequestMapping("/logout")
+    public String logoutPage() {
+        return "redirect:/login"; // Redirect to login after logout
     }
 }
