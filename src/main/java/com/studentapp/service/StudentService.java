@@ -12,11 +12,11 @@ import java.util.Optional;
 public class StudentService {
 
     private final StudentRepository studentRepository;
-    private final UserDetailsServiceImpl userDetailsService;  // Using UserDetailsServiceImpl
+    private final UserDetailsServiceImpl userDetailsService;
 
     public StudentService(StudentRepository studentRepository, UserDetailsServiceImpl userDetailsService) {
         this.studentRepository = studentRepository;
-        this.userDetailsService = userDetailsService;  // Injecting UserDetailsServiceImpl
+        this.userDetailsService = userDetailsService;
     }
 
     // Authentication logic (without password encoding)
@@ -27,7 +27,11 @@ public class StudentService {
 
     // Updated registration method leveraging UserDetailsServiceImpl
     public Student registerStudent(String name, String password) {
-        return userDetailsService.registerStudent(name, password);  // Make sure this returns Student
+        Student student = userDetailsService.registerStudent(name, password);  // Ensure Student is returned
+        if (student != null) {
+            System.out.println("Student registered: " + student.getName());  // Log to check
+        }
+        return student;
     }
 
     // Method to fetch all students
