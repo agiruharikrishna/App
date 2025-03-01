@@ -21,11 +21,13 @@ public class RegistrationController {
 
     @PostMapping("/register")
     public String register(@RequestBody User user, Model model) {
-    if (studentService.registerStudent(user.getName(), user.getPassword()) != null) {
+    User savedUser = userService.saveUser(user);  // Save user using userService
+    if (savedUser != null) {
         return "redirect:/login"; // Redirect to login after successful registration
     } else {
         model.addAttribute("error", "Registration failed.");
         return "register"; // Return to register page if registration fails
     }
 }
+
 }
