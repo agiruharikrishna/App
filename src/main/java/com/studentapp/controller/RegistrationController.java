@@ -19,8 +19,13 @@ public class RegistrationController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@RequestParam String name, @RequestParam String password) {
-        userService.saveUser(name, password);  // Save the user
-        return "redirect:/login";  // Redirect to login after successful registration
+    public String register(@RequestParam String name, @RequestParam String password, Model model) {
+    if (studentService.registerStudent(name, password) != null) {
+        return "redirect:/login";
+    } else {
+        model.addAttribute("error", "Registration failed.");
+        return "register";
     }
+}
+
 }
