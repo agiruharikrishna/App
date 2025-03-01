@@ -11,6 +11,16 @@ public class User {
     private String username;
     private String password;
 
+    // No-argument constructor (required by JPA)
+    public User() {
+    }
+
+    // Constructor with arguments
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     // Getters and Setters
     public Long getId() {
         return id;
