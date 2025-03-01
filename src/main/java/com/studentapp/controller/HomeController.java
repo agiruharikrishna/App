@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
-    @GetMapping("/home")  // Use /home to match the SecurityConfig success URL
+    @GetMapping("/homePage")  // Changed to avoid conflict
     public String homePage() {
         return "home";  // This will render home.html in the templates folder
     }
