@@ -19,9 +19,9 @@ public class RegistrationController {
     public String showRegistrationForm() {
         return "register";  // Display the registration form
     }
-
-    @PostMapping("/register")
-    public String register(@RequestBody User user) {
+    
+@PostMapping("/register")
+public String register(@RequestBody User user, Model model) {
     User savedUser = userService.saveUser(user);  // Save user using userService
     if (savedUser != null) {
         return "redirect:/login"; // Redirect to login after successful registration
@@ -30,5 +30,6 @@ public class RegistrationController {
         return "register"; // Return to register page if registration fails
     }
 }
+
 
 }
