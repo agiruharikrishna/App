@@ -20,16 +20,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Student student = studentRepository.findByName(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Student not found: " + username));
+    Student student = studentRepository.findByName(username)
+            .orElseThrow(() -> new UsernameNotFoundException("Student not found: " + username));
 
-        // No password encoding, using the password directly from the database
-        return User.withUsername(student.getName())
-                   .password(student.getPassword())  // Plain text password
-                   .roles("STUDENT")  // Default role
-                   .build();
-    }
+    System.out.println("User found: " + student.getName());  // Debugging line
 
+    return User.withUsername(student.getName())
+               .password(student.getPassword())  
+               .roles("STUDENT")
+               .build();
+   }
+
+    
     // Register a student without encoding the password
     public Student registerStudent(String name, String password) {
         Student student = new Student();
