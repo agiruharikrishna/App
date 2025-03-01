@@ -1,9 +1,8 @@
 package com.studentapp.service;
 
-import com.studentapp.security.UserDetailsServiceImpl;
 import com.studentapp.model.Student;
 import com.studentapp.repository.StudentRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import com.studentapp.security.UserDetailsServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,25 +12,22 @@ import java.util.Optional;
 public class StudentService {
 
     private final StudentRepository studentRepository;
-    private final PasswordEncoder passwordEncoder;
     private final UserDetailsServiceImpl userDetailsService;  // Using UserDetailsServiceImpl
 
-    public StudentService(StudentRepository studentRepository, PasswordEncoder passwordEncoder, UserDetailsServiceImpl userDetailsService) {
+    public StudentService(StudentRepository studentRepository, UserDetailsServiceImpl userDetailsService) {
         this.studentRepository = studentRepository;
-        this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;  // Injecting UserDetailsServiceImpl
     }
 
-    // Authentication logic
+    // Authentication logic (without password encoding)
     public boolean authenticate(String name, String password) {
         Optional<Student> student = studentRepository.findByName(name);
-        return student.isPresent() && passwordEncoder.matches(password, student.get().getPassword());
+        return student.isPresent() && student.get().getPassword().equals(password);  // No encoding comparison
     }
 
     // Updated registration method leveraging UserDetailsServiceImpl
-    public Student registerStudent(String name, String rawPassword) {
-        // Call to UserDetailsServiceImpl for registration and return the student
-        return userDetailsService.registerStudent(name, rawPassword);  // Ensure this returns Student
+    public Student registerStudent(String name, String password) {
+        return userDetailsService.registerStudent(name, password);  // Make sure this returns Student
     }
 
     // Method to fetch all students
