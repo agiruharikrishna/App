@@ -10,7 +10,7 @@ import jakarta.persistence.GenerationType;
 public class User {
 
     @Id
-    @GeneratedValue(strateg =  GenerationType.IDENTITY)
+    @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long id;
     private String username;
     private String password;
