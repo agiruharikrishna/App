@@ -6,16 +6,19 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final StudentRepository studentRepository;
+    private final PasswordEncoder passwordEncoder;  // Inject PasswordEncoder
 
-    // Constructor without PasswordEncoder
-    public UserDetailsServiceImpl(StudentRepository studentRepository) {
+    // Constructor with PasswordEncoder
+    public UserDetailsServiceImpl(StudentRepository studentRepository, PasswordEncoder passwordEncoder) {
         this.studentRepository = studentRepository;
+        this.passwordEncoder = passwordEncoder;  // Assign PasswordEncoder
     }
 
     @Override
@@ -30,11 +33,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                    .build();
     }
 
-    // Register a student without encoding the password (not recommended)
-    public Student registerStudent(String name, String password) {
+    // Register a student with encoded password
+    public Student registerStudent(String name, String rawPassword) {
         Student student = new Student();
         student.setName(name);
-        student.setPassword(password); // No password encoding
+        student.setPassword(passwordEncoder.encode(rawPassword)); // Encode password
         return studentRepository.save(student); // Save and return the student
     }
 }
