@@ -28,13 +28,15 @@ public class LoginController {
 
     // Home page after successful login
     @GetMapping("/home")
-    public String homePage(Authentication authentication, Model model) {
-        if (authentication != null && authentication.isAuthenticated()) {
-            model.addAttribute("name", authentication.getName());
-            return "home";
-        }
-        return "redirect:/login";  // Redirect to login if not authenticated
+public String homePage(Authentication authentication, Model model) {
+    if (authentication != null && authentication.isAuthenticated()) {
+        System.out.println("User is authenticated: " + authentication.getName());
+        model.addAttribute("name", authentication.getName());
+        return "home";
     }
+    System.out.println("User is not authenticated");
+    return "redirect:/login";  // Redirect to login if not authenticated
+}
     
     // Logout page or functionality
     @RequestMapping("/logout")
