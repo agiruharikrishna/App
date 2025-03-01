@@ -21,7 +21,7 @@ public class RegistrationController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody User user, Model model) {
+    public String register(@RequestBody User user) {
     User savedUser = userService.saveUser(user);  // Save user using userService
     if (savedUser != null) {
         return "redirect:/login"; // Redirect to login after successful registration
