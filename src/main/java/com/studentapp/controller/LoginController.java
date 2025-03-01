@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class LoginController {
@@ -27,7 +28,10 @@ public class LoginController {
     // Home page after successful login
     @GetMapping("/home")  // Changed to /home
     public String homePage(Authentication authentication, Model model) {
-        model.addAttribute("name", authentication.getName());
-        return "home";  // Only return the home view
+        if (authentication != null) {
+            model.addAttribute("name", authentication.getName());
+            return "home";
+        }
+        return "redirect:/login";  // Only return the home view
     }
 }
