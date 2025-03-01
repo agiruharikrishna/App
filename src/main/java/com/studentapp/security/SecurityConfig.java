@@ -19,25 +19,25 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(csrf -> csrf
-                .ignoringRequestMatchers("/logout")  // Disables CSRF protection for logout
-            )
-            .authorizeHttpRequests(auth -> 
-                auth.requestMatchers("/login", "/register", "/resources/**", "/css/**").permitAll()
-                    .anyRequest().authenticated()
-            )
-            .formLogin(form -> 
-                form.loginPage("/login")
-                    .defaultSuccessUrl("/home", true)
-                    .permitAll()
-            )
-            .logout(logout -> 
-                logout.logoutUrl("/logout")
-                    .logoutSuccessUrl("/login?logout")
-                    .permitAll()
-            );
-        return http.build();
-    }
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+        .csrf(csrf -> csrf
+            .ignoringRequestMatchers("/logout")
+        )
+        .authorizeHttpRequests(auth -> 
+            auth.requestMatchers("/login", "/register", "/resources/**", "/css/**").permitAll()
+                .anyRequest().authenticated()
+        )
+        .formLogin(form -> 
+            form.loginPage("/login")
+                .defaultSuccessUrl("/home", true)
+                .permitAll()
+        )
+        .logout(logout -> 
+            logout.logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout")
+                .permitAll()
+        );
+    return http.build();
+  }
 }
