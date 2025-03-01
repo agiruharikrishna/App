@@ -15,7 +15,7 @@ public class User {
     public User() {
     }
 
-    // Constructor with arguments
+    // Constructor with arguments (this is the one you need)
     public User(String username, String password) {
         this.username = username;
         this.password = password;
