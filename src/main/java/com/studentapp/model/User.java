@@ -1,32 +1,36 @@
 package com.studentapp.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 @Entity
 public class User {
 
     @Id
     private Long id;
+    private String username;
+    private String password;
 
-    private String name;
-
-    // Default constructor, getters, and setters
-    public User() {}
-
-    public Long getId() {
-        return id;
+    // Constructor with arguments
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    // Getters and Setters
+    public String getUsername() {
+        return username;
     }
 
-    public String getName() {
-        return name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
