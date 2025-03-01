@@ -11,8 +11,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public void saveUser(String name, String password) {
-        User user = new User(name, password);  // No encryption applied
+    public User saveUser(User user) {
         userRepository.save(user);  // Save the user to the database
     }
 }
